@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline'
+import useUsernameStore from '../zustand'
 type Messages = {
     body: string,
     from: string
@@ -15,17 +16,17 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
 
 
     const [message,setMessage] = useState('')
-
+    const { username } = useUsernameStore()
 
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         const newMessage = {
             body: message,
-            from: 'Me'
+            from: username
         }
         e.preventDefault()
         setMessages([...messages, newMessage])
-        socketIo.emit('message', message)
+        socketIo.emit('message', newMessage)
         setMessage('')
     }
 

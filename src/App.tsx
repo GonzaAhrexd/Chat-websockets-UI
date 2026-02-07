@@ -37,8 +37,8 @@ function App() {
             <div className='bg-gray-950 w-1/2 h-3/4 rounded-lg p-4'>
               <ul className='bg-gray-800 h-[85%] rounded-lg p-4'>
                 {messages.map((msg, index) => (
-                  <div key={index} className={msg.from === 'Me' ? 'flex justify-end mb-2' : 'flex justify-start mb-2'}>
-                    <div className={msg.from === 'Me' ? 'bg-gray-900 text-white rounded-lg px-4 py-2 max-w-xs' : 'bg-gray-700 text-white rounded-lg px-4 py-2 max-w-xs'}>
+                  <div key={index} className={msg.from === username ? 'flex justify-end mb-2' : 'flex justify-start mb-2'}>
+                    <div className={msg.from === username ? 'bg-gray-900 text-white rounded-lg px-4 py-2 max-w-xs' : 'bg-gray-700 text-white rounded-lg px-4 py-2 max-w-xs'}>
                       <p className='text-sm font-semibold'>{msg.from}</p>
                       <p>{msg.body}</p>
                     </div>
