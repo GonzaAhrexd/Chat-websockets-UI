@@ -53,7 +53,7 @@ function App() {
 
   return (
     <>
-      <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 text-4xl flex justify-center items-center font-bold mt-4 mb-2'>SUPER CHAT</h1>
+      <h1 className='text-transparent bg-clip-text bg-linear-to-r from-white to-gray-400 text-4xl flex justify-center items-center font-bold mt-4 mb-2'>SUPER CHAT</h1>
       {username && <p className='text-gray-400 text-center mb-2'>Logged in as: <span className='text-white font-semibold'>{username}</span></p>}
       {!username ? <SelectUserName /> :
         (
