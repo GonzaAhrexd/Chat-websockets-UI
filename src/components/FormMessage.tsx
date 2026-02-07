@@ -4,6 +4,7 @@ import useUsernameStore from '../zustand'
 type Messages = {
     body: string,
     from: string
+    time: string
 }
 
 type FormMessageProps = {
@@ -23,7 +24,8 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         const newMessage = {
             body: message,
-            from: username
+            from: username,
+            time: (new Date().getHours().toString().padStart(2, '0') + ':' + new Date().getMinutes().toString().padStart(2, '0'))
         }
         e.preventDefault()
         setMessages([...messages, newMessage])
@@ -34,15 +36,15 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
 
 
     return (
-        <form onSubmit={handleSubmit} className='bg-gray-700 p-4 rounded-lg flex flex-row gap-2 mt-4'>
-            <input value={message} type="text" placeholder='Type your message' className='bg-gray-800 w-full text-white p-3 rounded-lg' 
+        <form onSubmit={handleSubmit} className='bg-gray-700/50 p-3 rounded-xl flex flex-row gap-3 mt-4 border border-gray-600'>
+            <input value={message} type="text" placeholder='Type your message...' className='bg-gray-800/80 w-full text-white p-3 rounded-xl border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-500' 
             onChange = {(e) => { 
                 setMessage(e.target.value)
                socketIo.emit('typing', { user: username, isTyping: e.target.value.length > 0 })
             }
             }
             />
-            <button className='text-white font-bold bg-gray-900 rounded-lg px-4 py-2 hover:bg-gray-800 cursor-pointer'><PaperAirplaneIcon className='w-6 h-6' /></button>
+            <button className='text-white font-bold bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl px-4 py-2 hover:from-gray-700 hover:to-gray-800 cursor-pointer transition-all shadow-md hover:shadow-lg active:scale-95'><PaperAirplaneIcon className='w-6 h-6' /></button>
         </form>
     )
 }
