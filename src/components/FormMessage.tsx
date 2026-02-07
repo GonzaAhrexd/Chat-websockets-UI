@@ -18,6 +18,7 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
     const [message,setMessage] = useState('')
     const { username } = useUsernameStore()
 
+   
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         const newMessage = {
@@ -37,7 +38,7 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
             <input value={message} type="text" placeholder='Type your message' className='bg-gray-800 w-full text-white p-3 rounded-lg' 
             onChange = {(e) => { 
                 setMessage(e.target.value)
-               
+               socketIo.emit('typing', { user: username, isTyping: e.target.value.length > 0 })
             }
             }
             />
