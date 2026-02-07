@@ -9,13 +9,15 @@ import SelectUserName from './components/SelectUserName'
 
 function App() {
 
-  const [messages, setMessages] = useState<{ body: string, from: string, time: string }[]>([])
+
+
+  const [messages, setMessages] = useState<{ body: string, from: { username: string, id: string, color: string }, time: string }[]>([])
   const [isTyping, setIsTyping] = useState<{ user: string, isTyping: boolean }>({ user: '', isTyping: false })
   const typingTimeoutRef = useRef<number | null>(null)
 
   const { username } = useUsernameStore()
 
-  const receiveMessage = (message: { body: string, from: string, time: string }) => {
+  const receiveMessage = (message: { body: string, from: { username: string, id: string, color: string }, time: string }) => {
     setMessages(state => [...state, message])
   }
 
@@ -62,14 +64,14 @@ function App() {
               <ul className='bg-gray-800/50 h-[85%] rounded-xl p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent'>
                 {messages.map((msg, index) => (
 
-                    <div key={index} className={`flex items-center mb-3 ${msg.from === username ? 'justify-end' : 'justify-start'}`}>
-                      {msg.from !== username &&
-                        <div className='flex items-center justify-center rounded-full w-10 h-10 text-lg font-bold text-white bg-linear-to-br from-blue-400 to-blue-500 mr-2 shadow-md'>
-                          {msg.from.charAt(0).toUpperCase()}
+                    <div key={index} className={`flex items-center mb-3 ${msg.from.username === username ? 'justify-end' : 'justify-start'}`}>
+                      {msg.from.username !== username &&
+                        <div style={{backgroundColor: msg.from.color}} className={`flex items-center justify-center rounded-full w-10 h-10 text-lg font-bold text-white mr-2 shadow-md`}>
+                          {msg.from.username.charAt(0).toUpperCase()}
                         </div>
                         }
-                      <div className={`rounded-xl px-4 py-2 max-w-xs text-white shadow-md transition-all ${msg.from === username ? 'bg-linear-to-r from-gray-800 to-gray-900' : 'bg-gray-700/80'}`}>
-                        <p className='text-xs font-semibold text-gray-300'>{msg.from}</p>
+                      <div className={`rounded-xl px-4 py-2 max-w-xs text-white shadow-md transition-all ${msg.from.username === username ? 'bg-linear-to-r from-gray-800 to-gray-900' : 'bg-gray-700/80'}`}>
+                        <p className='text-xs font-semibold text-gray-300'>{msg.from.username}</p>
                         <p className='mt-1'>{msg.body}</p>
                         <p className='text-xs text-gray-400 mt-1'>{msg.time}</p>
                       </div>

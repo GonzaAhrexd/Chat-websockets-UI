@@ -3,7 +3,11 @@ import { PaperAirplaneIcon } from '@heroicons/react/24/outline'
 import useUsernameStore from '../zustand'
 type Messages = {
     body: string,
-    from: string
+    from: {
+        username: string,
+        id: string,
+        color: string
+    }
     time: string
 }
 
@@ -24,7 +28,11 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         const newMessage = {
             body: message,
-            from: username,
+            from: {
+                username: username,
+                id: '',
+                color: '' 
+            },
             time: (new Date().getHours().toString().padStart(2, '0') + ':' + new Date().getMinutes().toString().padStart(2, '0'))
         }
         e.preventDefault()
@@ -44,7 +52,7 @@ function FormMessage({socketIo, messages, setMessages}: FormMessageProps) {
             }
             }
             />
-            <button className='text-white font-bold bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl px-4 py-2 hover:from-gray-700 hover:to-gray-800 cursor-pointer transition-all shadow-md hover:shadow-lg active:scale-95'><PaperAirplaneIcon className='w-6 h-6' /></button>
+            <button className='text-white font-bold bg-linear-to-r from-gray-800 to-gray-900 rounded-xl px-4 py-2 hover:from-gray-700 hover:to-gray-800 cursor-pointer transition-all shadow-md hover:shadow-lg active:scale-95'><PaperAirplaneIcon className='w-6 h-6' /></button>
         </form>
     )
 }
