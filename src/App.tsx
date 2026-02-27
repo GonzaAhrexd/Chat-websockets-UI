@@ -7,8 +7,8 @@ import './App.css'
 import FormMessage from './components/FormMessage'
 import SelectUserName from './components/SelectUserName'
 
-function App() {
 
+function App() {
 
 
   const [messages, setMessages] = useState<{ body: string, from: { username: string, id: string, color: string }, time: string }[]>([])
