@@ -1,8 +1,7 @@
-import io from 'socket.io-client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect,  } from 'react'
 import useUsernameStore from './zustand'
-const socketIo = io('/')
-
+import { SocketContext } from './context/context-socket'
+import { useContext } from 'react'
 import './App.css'
 import FormMessage from './components/FormMessage'
 import SelectUserName from './components/SelectUserName'
@@ -11,43 +10,9 @@ import SelectUserName from './components/SelectUserName'
 function App() {
 
 
-  const [messages, setMessages] = useState<{ body: string, from: { username: string, id: string, color: string }, time: string }[]>([])
-  const [isTyping, setIsTyping] = useState<{ user: string, isTyping: boolean }>({ user: '', isTyping: false })
-  const typingTimeoutRef = useRef<number | null>(null)
 
   const { username } = useUsernameStore()
-
-  const receiveMessage = (message: { body: string, from: { username: string, id: string, color: string }, time: string }) => {
-    setMessages(state => [...state, message])
-  }
-
-  const detectTyping = (data: { user: string, isTyping: boolean }) => {
-    // Limpiar timeout anterior si existe
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current)
-    }
-
-    setIsTyping(data)
-
-    if (data.isTyping) {
-      typingTimeoutRef.current = setTimeout(() => {
-        setIsTyping({ user: '', isTyping: false })
-      }, 1000)
-    }
-  }
-
-  useEffect(() => {
-    socketIo.on('message', receiveMessage)
-    socketIo.on('typing', detectTyping)
-
-    return () => {
-      socketIo.off('message', receiveMessage)
-      socketIo.off('typing', detectTyping)
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current)
-      }
-    }
-  }, [])
+  const {  messages, isTyping } = useContext(SocketContext) || {} 
 
   useEffect(() => {
     console.log('isTyping updated:', isTyping)
@@ -62,7 +27,7 @@ function App() {
           <div className='flex justify-center items-center w-full h-screen px-4'>
             <div className='bg-gray-950 w-full md:w-1/2 h-[80%] md:h-3/4 rounded-xl p-4 shadow-2xl border border-gray-800'>
               <ul className='bg-gray-800/50 h-[85%] rounded-xl p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent'>
-                {messages.map((msg, index) => (
+                {messages?.map((msg, index) => (
 
                     <div key={index} className={`flex items-center mb-3 ${msg.from.username === username ? 'justify-end' : 'justify-start'}`}>
                       {msg.from.username !== username &&
@@ -78,7 +43,7 @@ function App() {
 
                   </div>
                 ))}
-                {isTyping.isTyping && isTyping.user != username ?
+                {isTyping?.isTyping && isTyping.user != username ?
                   <div className='flex justify-start mb-2 animate-pulse'>
                     <div className='bg-gray-700/60 text-white rounded-xl px-4 py-2 max-w-xs border border-gray-600'>
                       <p className='text-xs font-semibold text-gray-300'>{isTyping.user}</p>
@@ -87,7 +52,7 @@ function App() {
                   </div>
                   : null}
               </ul>
-              <FormMessage socketIo={socketIo} messages={messages} setMessages={setMessages} />
+              <FormMessage  />
             </div>
           </div>
         )
