@@ -27,15 +27,19 @@ type ContextType = {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   isTyping: TypingStatus;
+  emitTyping: (username: string, isTyping: boolean) => void;
+  sendMessage: (newMessage: Message) => void;
 }
 
-
+// eslint-disable-next-line react-refresh/only-export-components
 export const SocketContext = createContext<ContextType>(
   {
     Socket: null,
     messages: [],
     setMessages: () => { },
-    isTyping: { user: '', isTyping: false }
+    isTyping: { user: '', isTyping: false },
+    emitTyping: () => { },
+    sendMessage: () => { }
   }
 );
 
@@ -64,6 +68,18 @@ export function ContextSocketProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const emitTyping = (username: string, isTyping: boolean) => {
+    Socket?.emit('typing', { user: username, isTyping })
+  }
+
+  
+    const sendMessage = (newMessage: Message) => {
+        setMessages([...messages, newMessage])
+        Socket?.emit('message', newMessage)
+    }
+
+
+
 
 
 
@@ -87,5 +103,5 @@ export function ContextSocketProvider({ children }: { children: ReactNode }) {
 
   }, []);
 
-  return <SocketContext.Provider value={{ Socket, messages, setMessages, isTyping }}> {children} </SocketContext.Provider>;
+  return <SocketContext.Provider value={{ Socket, messages, setMessages, isTyping, emitTyping, sendMessage}}> {children} </SocketContext.Provider>;
 }

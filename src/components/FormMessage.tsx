@@ -6,7 +6,7 @@ import { SocketContext } from '../context/context-socket'
 
 function FormMessage() {
 
-    const { Socket: socketIo, messages, setMessages } = useContext(SocketContext) 
+    const {  emitTyping, sendMessage } = useContext(SocketContext) 
 
 
     const [message, setMessage] = useState('')
@@ -25,8 +25,7 @@ function FormMessage() {
             time: (new Date().getHours().toString().padStart(2, '0') + ':' + new Date().getMinutes().toString().padStart(2, '0'))
         }
         e.preventDefault()
-        setMessages([...messages, newMessage])
-        socketIo?.emit('message', newMessage)
+        sendMessage(newMessage)
         setMessage('')
     }
 
@@ -37,7 +36,7 @@ function FormMessage() {
             <input value={message} type="text" placeholder='Type your message...' className='bg-gray-800/80 w-full text-white p-3 rounded-xl border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-500'
                 onChange={(e) => {
                     setMessage(e.target.value)
-                    socketIo?.emit('typing', { user: username, isTyping: e.target.value.length > 0 })
+                    emitTyping(username, e.target.value.length > 0)
                 }
                 }
             />
